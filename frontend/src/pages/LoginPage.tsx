@@ -1,4 +1,8 @@
 import { useId, useState, type FormEvent } from 'react'
+import { LogoMark } from '../components/LogoMark'
+import { Stamp } from '../components/Stamp'
+import type { Student } from '../data/students'
+import { saveSession, login } from '../lib/auth'
 
 type FormState = {
   nis: string
@@ -28,39 +32,7 @@ function validateField(key: keyof FormState, value: string): string | undefined 
   return undefined
 }
 
-/** Motif tanda tangan halaman ini: stempel kehadiran. */
-function Stamp({ className }: { className?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`inline-flex h-14 w-14 rotate-[-7deg] items-center justify-center rounded-full border-2 border-signal text-[0.625rem] font-brand font-bold uppercase tracking-[0.18em] text-signal sm:h-16 sm:w-16 ${className ?? ''}`}
-    >
-      Hadir
-    </span>
-  )
-}
-
-function LogoMark({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H10a2 2 0 0 1 2 2v13a1.6 1.6 0 0 0-1.6-1.6H4.5A1.5 1.5 0 0 1 3 15.9Z" />
-      <path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H14a2 2 0 0 0-2 2v13a1.6 1.6 0 0 1 1.6-1.6h5.9A1.5 1.5 0 0 0 21 15.9Z" />
-      <path d="M6.5 8.5h2M15.5 8.5h2M6.5 12h2M15.5 12h2" />
-    </svg>
-  )
-}
-
-export default function LoginPage() {
+export default function LoginPage({ onSuccess }: { onSuccess: (session: Student) => void }) {
   const fieldId = useId()
   const nisId = `${fieldId}-nis`
   const nisHelpId = `${nisId}-help`
@@ -102,13 +74,21 @@ export default function LoginPage() {
     setSubmitting(true)
     setNotice(null)
 
-    // TODO: ganti dengan POST /auth/login saat backend siap.
-    await new Promise((resolve) => setTimeout(resolve, 700))
+    // Memeriksa ke daftar akun contoh di src/data/students.ts.
+    // Ganti dengan POST /auth/login saat backend siap.
+    await new Promise((resolve) => setTimeout(resolve, 400))
+
+    const hasil = login(form.nis, form.password)
 
     setSubmitting(false)
-    setNotice(
-      'Isian sudah valid. Koneksi ke server belum dibuat, jadi login belum bisa dilanjutkan.',
-    )
+
+    if (!hasil.ok) {
+      setNotice(hasil.message)
+      return
+    }
+
+    saveSession(hasil.session)
+    onSuccess(hasil.session)
   }
 
   const fieldBase =
@@ -308,14 +288,23 @@ export default function LoginPage() {
 
               {notice && (
                 <p
-                  role="status"
-                  className="mt-4 rounded-field border border-signal/25 bg-signal-soft px-3.5 py-3 text-xs leading-relaxed text-ink"
+                  role="alert"
+                  className="mt-4 rounded-field border border-danger/30 bg-danger-soft px-3.5 py-3 text-xs leading-relaxed font-medium text-danger"
                 >
                   {notice}
                 </p>
               )}
             </form>
           </section>
+
+          <div className="mt-4 rounded-field border border-line bg-surface px-4 py-3">
+            <p className="text-xs font-medium text-ink">Akun contoh untuk uji coba</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted">
+              NIS <span className="font-semibold tabular-nums text-ink">2024001</span>,
+              password <span className="font-semibold tabular-nums text-ink">123456</span>.
+              Akun ini hanya ada di browser, belum tersambung ke server sekolah.
+            </p>
+          </div>
 
           <p className="mt-4 text-center text-xs leading-relaxed text-muted">
             Lupa password? Hubungi wali kelas atau admin sekolah.

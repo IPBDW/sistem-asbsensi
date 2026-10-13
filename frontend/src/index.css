@@ -15,8 +15,9 @@
   --color-danger: #b42318;
   --color-danger-soft: #feeceb;
 
-  /* Satu skala radius untuk halaman */
+  /* Skala radius halaman. Dua tingkat, bukan nilai acak per komponen. */
   --radius-field: 0.625rem;
+  --radius-mark: 0.25rem;
 
   /* Brand: serif untuk nuansa cetak */
   --font-brand: Georgia, 'Times New Roman', serif;
