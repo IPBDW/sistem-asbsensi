@@ -57,4 +57,52 @@ Latar panel memakai garis kolom buku presensi (repeating rule) + satu garis marg
 ## Halaman yang sudah dibangun
 
 - `frontend/src/pages/LoginPage.tsx`: login siswa (NIS + password).
-  Belum tersambung ke server (placeholder, lihat TODO di kode).
+  Memeriksa ke daftar akun contoh, belum ke server.
+- `frontend/src/pages/DashboardPage.tsx`: dashboard presensi siswa.
+  Presensi hari ini, rekap 12 hari sekolah terakhir, dan riwayat kehadiran.
+
+## Halaman dashboard (presensi siswa)
+
+Arah: **rekap di buku presensi**. Halaman ini adalah lembar rekap yang biasanya
+dipegang guru, bukan dasbor analitik.
+
+Struktur:
+
+1. Header: logo + nama aplikasi + tombol Keluar.
+2. Identitas siswa + tanggal.
+3. **Kartu hari ini**: satu aksi utama halaman ini (tombol Presensi sekarang).
+4. **Rekap**: jumlah per status untuk 12 hari sekolah terakhir.
+5. **Riwayat**: daftar tanggal dengan tanda status.
+6. Catatan bahwa datanya contoh.
+
+Keputusan dan alasannya:
+
+- **Tanda status memakai huruf H/T/I/S/A**, singkatan yang memang dipakai guru
+  di buku presensi. Huruf di dalam kotak kecil meniru tanda cetak, bukan ikon.
+- **Lima status tidak memakai lima warna.** Hierarki yang perlu dibaca hanya dua:
+  tercatat baik, dan perlu perhatian. Hadir memakai accent tunggal halaman ini.
+  Terlambat turun ke netral gelap, izin dan sakit ke netral, hanya alpa memakai
+  warna bahaya karena itu satu-satunya status yang menuntut tindakan.
+- **Rekap berbentuk baris seragam**, bukan kartu beragam. Itemnya setara (semua
+  hitungan jenis yang sama), jadi keseragaman di sini memang bentuk yang benar,
+  bukan repetisi tanpa alasan.
+- **Bar aksen di tepi kiri kartu** mengulang motif "punggung lembar" dari halaman
+  login, supaya kedua halaman terbaca sebagai satu sistem.
+- **Angka memakai `tabular-nums`** supaya kolom hitungan rata saat dibandingkan.
+
+Skala radius halaman ini ada dua tingkat, keduanya token:
+
+| Token | Nilai | Dipakai untuk |
+|---|---|---|
+| `--radius-field` | 10px | Kartu, input, tombol, panel |
+| `--radius-mark` | 4px | Kotak tanda status |
+
+## Data
+
+- `frontend/src/data/students.ts`: satu akun contoh (Santoso, NIS 2024001).
+- `frontend/src/data/attendance.ts`: riwayat contoh 12 hari sekolah terakhir.
+- `frontend/src/lib/auth.ts`: pemeriksaan kredensial di sisi klien.
+
+**Batas yang disadari:** semua data ini hidup di bundle frontend, jadi bisa
+dibaca siapa pun lewat DevTools, termasuk password. Ini hanya untuk mencoba
+alur halaman. Ganti dengan backend sebelum dipakai sungguhan.

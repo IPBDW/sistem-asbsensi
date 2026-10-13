@@ -179,7 +179,7 @@ export default function DashboardPage({ session, onLogout }: Props) {
           <button
             type="button"
             onClick={onLogout}
-            className="ml-auto rounded-field border border-field-line px-3.5 py-2 text-sm font-medium text-ink transition hover:bg-signal-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+            className="ml-auto inline-flex min-h-11 items-center rounded-field border border-field-line px-4 text-sm font-medium text-ink transition hover:bg-signal-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
           >
             Keluar
           </button>
@@ -239,7 +239,9 @@ export default function DashboardPage({ session, onLogout }: Props) {
                   id="judul-rekap"
                   className="font-brand text-base text-ink sm:text-lg"
                 >
-                  Rekap {data.records.length} hari sekolah terakhir
+                  {data.records.length === 0
+                    ? 'Rekap kehadiran'
+                    : `Rekap ${data.records.length} hari sekolah terakhir`}
                 </h2>
 
                 <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-field border border-line bg-surface sm:grid-cols-5">
