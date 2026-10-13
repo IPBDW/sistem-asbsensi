@@ -1,5 +1,27 @@
 @import 'tailwindcss';
 
+@theme {
+  /* Palet: buku presensi (tinta navy, tinta pulpen, kertas) */
+  --color-ink: #0e1c33;
+  --color-ink-2: #1b2e4b;
+  --color-signal: #1d3fa8;
+  --color-signal-soft: #e8ecfa;
+  --color-paper: #f3f4f1;
+  --color-surface: #ffffff;
+  --color-line: #d5dad3;
+  /* Batas kontrol (input) butuh >= 3:1 (WCAG 1.4.11), garis dekoratif tidak. */
+  --color-field-line: #858c83;
+  --color-muted: #56606e;
+  --color-danger: #b42318;
+  --color-danger-soft: #feeceb;
+
+  /* Satu skala radius untuk halaman */
+  --radius-field: 0.625rem;
+
+  /* Brand: serif untuk nuansa cetak */
+  --font-brand: Georgia, 'Times New Roman', serif;
+}
+
 :root {
   color-scheme: light;
 }
@@ -16,4 +38,27 @@ body {
     'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Motif tanda tangan: garis kolom buku presensi.
+   Alasan: subjeknya buku presensi kelas, bukan aplikasi tech.
+   Dipakai sangat tipis supaya tidak bersaing dengan isi form. */
+.paper-rules {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink) 5%, transparent) 0,
+    color-mix(in srgb, var(--color-ink) 5%, transparent) 1px,
+    transparent 1px,
+    transparent 2rem
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
